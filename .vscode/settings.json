@@ -1,6 +1,9 @@
 {
     "cSpell.words": [
+        "creadentials",
+        "metatype",
         "nestjs",
-        "statefarm"
+        "statefarm",
+        "typeorm"
     ]
 }
