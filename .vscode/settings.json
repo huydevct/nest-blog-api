@@ -1,9 +1,11 @@
 {
     "cSpell.words": [
         "creadentials",
+        "followee",
         "metatype",
         "nestjs",
         "statefarm",
-        "typeorm"
+        "typeorm",
+        "unfollow"
     ]
 }
