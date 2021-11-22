@@ -34,7 +34,8 @@ export class UserEntity extends AbstractEntity {
   }
 
   toJSON() {
-    const { id, email, password, username, bio, image, created, updated } = this;
+    const { id, email, password, username, bio, image, created, updated } =
+      this;
     return { id, email, password, username, bio, image, created, updated };
   }
 }

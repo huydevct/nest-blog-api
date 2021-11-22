@@ -1,5 +1,5 @@
 import { UserEntity } from './../entities/user.entity';
-import { LoginDTO, RegisterDTO } from './../models/user.dto';
+import { LoginDTO, RegisterDTO } from '../models/user.model';
 import {
   ConflictException,
   Injectable,
@@ -8,18 +8,22 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
+    private jwtService: JwtService,
   ) {}
 
   async register(credentials: RegisterDTO) {
     try {
       const user = await this.userRepo.create(credentials);
       await user.save();
-      return user;
+      const payload = { username: user.username };
+      const token = this.jwtService.sign(payload);
+      return { user: { ...user.toJSON(), token } };
     } catch (err) {
       if (err.code === '23505') {
         throw new ConflictException('Username has already been taken');
@@ -35,7 +39,9 @@ export class AuthService {
       if (!isValid) {
         throw new UnauthorizedException('Invalid creadentials');
       }
-      return user;
+      const payload = { username: user.username };
+      const token = this.jwtService.sign(payload);
+      return { user: { ...user.toJSON(), token } };
     } catch (error) {
       throw new UnauthorizedException('Invalid creadentials');
     }
