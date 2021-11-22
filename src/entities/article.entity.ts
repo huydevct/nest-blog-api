@@ -1,12 +1,5 @@
 import { UserEntity } from './user.entity';
-import {
-  BeforeInsert,
-  Column,
-  Entity,
-  ManyToOne,
-  JoinColumn,
-  RelationCount,
-} from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { AbstractEntity } from './abstract-entity';
 import * as slugify from 'slug';
 
