@@ -1,3 +1,4 @@
+import { AuthService } from './../auth/auth.service';
 import { UpdateUserDTO } from './../models/user.model';
 import { UserEntity } from './../entities/user.entity';
 import {
@@ -14,12 +15,12 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
   @Get()
   @UseGuards(AuthGuard())
   findCurrentUser(@User() { username }: UserEntity) {
-    return this.userService.findByUsername(username);
+    return this.authService.findCurrentUser(username);
   }
 
   @Put()
@@ -27,8 +28,8 @@ export class UserController {
   update(
     @User() { username }: UserEntity,
     @Body(new ValidationPipe({ transform: true, whitelist: true }))
-    data: UpdateUserDTO,
+    data: { user: UpdateUserDTO },
   ) {
-    return this.userService.updateUser(username, data);
+    return this.authService.updateUser(username, data.user);
   }
 }
