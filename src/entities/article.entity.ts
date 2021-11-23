@@ -1,7 +1,7 @@
 import { UserEntity } from './user.entity';
-import { BeforeInsert, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, JoinTable } from 'typeorm';
 import { AbstractEntity } from './abstract-entity';
-import * as slugify from 'slug';
+import * as slug from 'slug';
 
 @Entity('articles')
 export class ArticleEntity extends AbstractEntity {
@@ -18,7 +18,7 @@ export class ArticleEntity extends AbstractEntity {
   body: string;
 
   @ManyToOne((type) => UserEntity, (user) => user.favorites, { eager: true })
-  @JoinColumn()
+  @JoinTable()
   favoritedBy: UserEntity[];
 
   //   @RelationCount((article: ArticleEntity) => article.favoritedBy)
@@ -33,7 +33,7 @@ export class ArticleEntity extends AbstractEntity {
   @BeforeInsert()
   generateSlug() {
     this.slug =
-      slugify(this.title, { lower: true }) +
+      slug(this.title, { lower: true }) +
       '-' +
       ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
