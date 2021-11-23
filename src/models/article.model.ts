@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreateArticleDTO {
@@ -13,6 +14,11 @@ export class CreateArticleDTO {
   @IsArray()
   @IsString({ each: true })
   tagList: string[];
+}
+
+export class CreateArticleBody {
+  @ApiProperty()
+  article: CreateArticleDTO;
 }
 
 export class UpdateArticleDTO {

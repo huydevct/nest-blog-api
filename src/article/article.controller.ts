@@ -22,6 +22,11 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { User } from 'src/auth/user.decorator';
 import { ValidationPipe } from 'src/shared/validation.pipe';
 
@@ -41,6 +46,7 @@ export class ArticleController {
 
   @Get('/feed')
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   async findFeed(@User() user: UserEntity, @Query() query: FindFeedQuery) {
     const articles = await this.articleService.findFeed(user, query);
     return { articles, articlesCount: articles.length };
@@ -116,7 +122,11 @@ export class ArticleController {
     return { article };
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Unfavorite article' })
+  @ApiUnauthorizedResponse()
   @Delete('/:slug/favorite')
+  @UseGuards(AuthGuard())
   async unfavoriteArticle(
     @Param('slug') slug: string,
     @User() user: UserEntity,
