@@ -5,6 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { UserEntity } from 'src/entities/user.entity';
 
 export class LoginDTO {
   @IsEmail()
@@ -37,4 +38,8 @@ export class UpdateUserDTO {
 
 export interface AuthPayload {
   username: string;
+}
+
+export interface AuthResponse extends Partial<UserEntity> {
+  token: string;
 }

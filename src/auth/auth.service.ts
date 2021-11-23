@@ -1,3 +1,5 @@
+import { AuthResponse } from './../models/user.model';
+import { ResponseObject } from './../models/response.model';
 import { UserEntity } from './../entities/user.entity';
 import { LoginDTO, RegisterDTO, UpdateUserDTO } from '../models/user.model';
 import {
@@ -36,7 +38,7 @@ export class AuthService {
     const user = await this.userRepo.findOne({ where: { username } });
     const payload = { username };
     const token = this.jwtService.sign(payload);
-    return { user: { ...user.toJSON(), token } };
+    return { ...user.toJSON(), token };
   }
 
   async login({ email, password }: LoginDTO) {
@@ -48,17 +50,20 @@ export class AuthService {
       }
       const payload = { username: user.username };
       const token = this.jwtService.sign(payload);
-      return { user: { ...user.toJSON(), token } };
+      return { ...user.toJSON(), token };
     } catch (error) {
       throw new UnauthorizedException('Invalid creadentials');
     }
   }
 
-  async updateUser(username: string, data: UpdateUserDTO) {
+  async updateUser(
+    username: string,
+    data: UpdateUserDTO,
+  ): Promise<AuthResponse> {
     await this.userRepo.update({ username }, data);
     const user = await this.userRepo.findOne({ where: { username } });
     const payload = { username };
     const token = this.jwtService.sign(payload);
-    return { user: { ...user.toJSON(), token } };
+    return { ...user.toJSON(), token };
   }
 }
