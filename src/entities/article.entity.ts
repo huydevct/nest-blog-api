@@ -17,6 +17,7 @@ export class ArticleEntity extends AbstractEntity {
   @Column()
   body: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToOne((type) => UserEntity, (user) => user.favorites, { eager: true })
   @JoinTable()
   favoritedBy: UserEntity[];
@@ -24,6 +25,7 @@ export class ArticleEntity extends AbstractEntity {
   //   @RelationCount((article: ArticleEntity) => article.favoritedBy)
   //   favoriteCount: number;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToOne((type) => UserEntity, (user) => user.articles, { eager: true })
   author: UserEntity;
 
