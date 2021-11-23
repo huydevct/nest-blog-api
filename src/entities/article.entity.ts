@@ -1,5 +1,13 @@
+import { CommentEntity } from './comment.entity';
 import { UserEntity } from './user.entity';
-import { BeforeInsert, Column, Entity, ManyToOne, JoinTable } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  JoinTable,
+  OneToMany,
+} from 'typeorm';
 import { AbstractEntity } from './abstract-entity';
 import * as slug from 'slug';
 
@@ -24,6 +32,9 @@ export class ArticleEntity extends AbstractEntity {
 
   //   @RelationCount((article: ArticleEntity) => article.favoritedBy)
   //   favoriteCount: number;
+
+  @OneToMany((type) => CommentEntity, (comment) => comment.article)
+  comments: CommentEntity[];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToOne((type) => UserEntity, (user) => user.articles, { eager: true })

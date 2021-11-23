@@ -1,3 +1,4 @@
+import { TagEntity } from './entities/tag.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -12,6 +13,7 @@ import { ArticleModule } from './article/article.module';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConnectionService,
     }),
+    TypeOrmModule.forFeature([TagEntity]),
     AuthModule,
     UserModule,
     ArticleModule,

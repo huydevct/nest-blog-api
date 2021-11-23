@@ -1,3 +1,5 @@
+import { CreateCommentDTO } from './../models/comment.model';
+import { CommentsService } from './comments.service';
 import { OptionalAuthGuard } from './../auth/optional-auth.guard';
 import {
   CreateArticleDTO,
@@ -25,7 +27,10 @@ import { ValidationPipe } from 'src/shared/validation.pipe';
 
 @Controller('articles')
 export class ArticleController {
-  constructor(private articleService: ArticleService) {}
+  constructor(
+    private articleService: ArticleService,
+    private commentService: CommentsService,
+  ) {}
 
   @Get()
   @UseGuards(new OptionalAuthGuard())
@@ -80,6 +85,28 @@ export class ArticleController {
   async deleteArticle(@Param('slug') slug: string, @User() user: UserEntity) {
     const article = await this.articleService.deleteArticle(slug, user);
     return { article };
+  }
+
+  @Get('/:slug/comments')
+  async findComments(@Param('slug') slug: string) {
+    const comment = await this.commentService.findByArticleSlug(slug);
+    return { comment };
+  }
+
+  @Post('/:slug/comments')
+  @UsePipes(new ValidationPipe())
+  async createComment(
+    @User() user: UserEntity,
+    @Body() data: { comment: CreateCommentDTO },
+  ) {
+    const comment = await this.commentService.createComment(user, data.comment);
+    return { comment };
+  }
+
+  @Delete('/:slug/comments/:id')
+  async deleteComment(@Param('id') id: number, @User() user: UserEntity) {
+    const comment = await this.commentService.deleteComment(user, id);
+    return { comment };
   }
 
   @Post('/:slug/favorite')

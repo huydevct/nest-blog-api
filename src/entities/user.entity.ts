@@ -1,3 +1,4 @@
+import { CommentEntity } from './comment.entity';
 import {
   BeforeInsert,
   Column,
@@ -41,6 +42,9 @@ export class UserEntity extends AbstractEntity {
 
   @OneToMany((type) => ArticleEntity, (article) => article.author)
   articles: ArticleEntity[];
+
+  @OneToMany((type) => CommentEntity, (comment) => comment.author)
+  comments: CommentEntity[];
 
   @ManyToMany((type) => ArticleEntity, (article) => article.favoritedBy)
   @JoinColumn()
