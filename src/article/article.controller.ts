@@ -1,5 +1,10 @@
 import { OptionalAuthGuard } from './../auth/optional-auth.guard';
-import { CreateArticleDTO, UpdateArticleDTO } from './../models/article.model';
+import {
+  CreateArticleDTO,
+  UpdateArticleDTO,
+  FindAllQuery,
+  FindFeedQuery,
+} from './../models/article.model';
 import { UserEntity } from './../entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
@@ -11,6 +16,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -20,6 +26,21 @@ import { ValidationPipe } from 'src/shared/validation.pipe';
 @Controller('articles')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
+
+  @Get()
+  @UseGuards(new OptionalAuthGuard())
+  async findAll(@User() user: UserEntity, @Query() query: FindAllQuery) {
+    const articles = await this.articleService.findAll(user, query);
+    return { articles, articlesCount: articles.length };
+  }
+
+  @Get('/feed')
+  @UseGuards(AuthGuard())
+  async findFeed(@User() user: UserEntity, @Query() query: FindFeedQuery) {
+    const articles = await this.articleService.findFeed(user, query);
+    return { articles, articlesCount: articles.length };
+  }
+
   @Get('/:slug')
   @UseGuards(new OptionalAuthGuard())
   async findBySlug(@Param('slug') slug: string, @User() user: UserEntity) {
@@ -58,6 +79,22 @@ export class ArticleController {
   @UseGuards(AuthGuard())
   async deleteArticle(@Param('slug') slug: string, @User() user: UserEntity) {
     const article = await this.articleService.deleteArticle(slug, user);
+    return { article };
+  }
+
+  @Post('/:slug/favorite')
+  @UseGuards(AuthGuard())
+  async favoriteArticle(@Param('slug') slug: string, @User() user: UserEntity) {
+    const article = this.articleService.favoriteArticle(slug, user);
+    return { article };
+  }
+
+  @Delete('/:slug/favorite')
+  async unfavoriteArticle(
+    @Param('slug') slug: string,
+    @User() user: UserEntity,
+  ) {
+    const article = this.articleService.unfavoriteArticle(slug, user);
     return { article };
   }
 }

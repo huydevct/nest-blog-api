@@ -62,7 +62,7 @@ export class ArticleEntity extends AbstractEntity {
   toArticle(user: UserEntity) {
     let favorited = null;
     if (user) {
-      favorited = this.favoritedBy.includes(user);
+      favorited = this.favoritedBy.map((user) => user.id).includes(user.id);
     }
     const article: any = this.toJSON();
     delete article.favoritedBy;
